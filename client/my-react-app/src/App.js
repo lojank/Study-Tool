@@ -4,20 +4,32 @@ import './App.css';
 function App() {
   return (
     <div className="App">
+      <div className="login-img">
+      <img src="https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcm0yMThiYXRjaDUtbmluZy0wN18xLmpwZw.jpg" className="App-logo" alt="logo" />
+      </div>
+      <div className="login-con">
+
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <h1 className>New Here?</h1>
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Email
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <input
+        type="text"
+        placeholder="Enter your email address or username"
+        className="Email-input"
+        />
+        <p>
+          Password
+        </p>
+        <input
+        type="text"
+        placeholder="Enter your password"
+        className="Email-input"
+        />
+        
       </header>
+      </div>
     </div>
   );
 }

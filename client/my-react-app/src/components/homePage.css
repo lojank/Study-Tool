@@ -1,0 +1,61 @@
+.homePage {
+    width: 100%;
+    height: 100vh; /* Changed to full viewport height */
+    background-color: grey;
+    display: flex;
+    flex-direction: column; /* Ensure content stacks vertically */
+}
+
+.navbar {
+    z-index: 1;
+    position: relative;
+    border: solid 1px black;
+    width: 100%;
+    height: 10%; /* Adjusted height to better fit the content */
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    gap: 85%;
+}
+
+.title {
+    z-index: 1;
+    color: rgb(3, 152, 3);
+}
+
+.logIn {
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 10px;
+    height:50%;
+    color: black;
+    background: rgb(12, 190, 12);
+}
+
+.buttonName {
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    height: 90%; /* Take up remaining space */
+    width: 100%;
+}
+
+.phrase, .name {
+    text-align: center; /* Center text within elements */
+}
+
+.signUp {
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 10px;
+    color: black;
+    background: rgb(12, 190, 12);
+    cursor: pointer;
+}
+.pic {
+    width:100%;
+    background-color: black;
+}

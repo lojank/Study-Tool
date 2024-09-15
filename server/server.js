@@ -40,6 +40,36 @@ app.post('/signup', async (req, res) => {
   }
 });
 
+// Login endpoint
+app.post('/', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Check if email exists
+    const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+
+    // If user doesn't exist, return an error
+    if (user.rows.length === 0) {
+      return res.status(400).json({ message: 'Invalid email or password', status: false });
+    }
+
+    // User exists, check the password
+    const validPassword = await bcrypt.compare(password, user.rows[0].password);
+
+    // If the password is incorrect, return an error
+    if (!validPassword) {
+      return res.status(400).json({ message: 'Invalid email or password', status: false });
+    }
+
+    // If everything is fine, return success and possibly a token/session
+    res.status(200).json({ message: 'Login successful! Redirecting to homepage...', status: true });
+
+  } catch (err) {
+    console.error('Error during login:', err);
+    res.status(500).json({ error: 'Server error', status: false });
+  }
+});
+
 
 // Example route to get all users from the database
 app.get('/users', async (req, res) => {

@@ -258,3 +258,31 @@
     align-items: center;
     justify-content: center;
 }
+.wrap5 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row; /* Stack children vertically */
+}
+
+.question-label5 {
+    display: flex;
+    gap: 5px; /* 2rem gap (4 * 2 = 8px) */
+    font-size: 15px; /* Text size */
+    padding-left: 12px;
+  }
+  .question-input5 {
+    font-size: 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 12px;
+    margin-left: -3px;
+    width: calc(100% - 50px); /* Adjust width dynamically based on the available space */
+    min-width: 150px; /* Minimum width to avoid the element becoming too small */
+    resize: none;
+    outline: none;
+    margin-right: 10px;
+    flex-grow: 1; /* Allows the input to grow within the container */
+    height: 17px;
+    margin-top: 10px;
+  }

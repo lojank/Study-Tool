@@ -6,6 +6,7 @@ import Signup from './components/Signup';
 import HomePage from './components/homePage';
 import MakeTest from './components/makeTest';
 import MakeQuiz from './components/makeQuiz';
+import Test from './components/Test'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/homePage" element={<HomePage />} />
           <Route path="/makeTest" element={<MakeTest />} />
           <Route path="/makeQuiz" element={<MakeQuiz />} />
+          <Route path="/test" element={<Test />} />
         </Routes>
 
       </div>

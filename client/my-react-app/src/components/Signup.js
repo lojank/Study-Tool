@@ -1,8 +1,10 @@
 import './Signup.css';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 import {useState} from 'react';
 
 function Signup() {
-
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({first_name:"", last_name:"", email: "",password: "", confirm_password:""});
 
   const handleChange = (event) => {
@@ -10,16 +12,37 @@ function Signup() {
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (formData.password !== formData.confirm_password) {
-      alert('Passwords do not match')
+      alert('Passwords do not match');
     } else {
-      alert(`First Name: ${formData.first_name}, Last Name: ${formData.last_name}, Email: ${formData.email}, Password: ${formData.password}, Confirm Password: ${formData.confirm_password}`)
-    
+      try {
+        const response = await axios.post('http://localhost:5001/signup', {
+          first_name: formData.first_name,
+          last_name: formData.last_name,
+          email: formData.email,
+          password: formData.password,
+        });
+  
+        if (response.data.status === true) {
+          alert('Signup successful! Redirecting to homepage...');
+          navigate('/homePage');
+        }
+      } catch (error) {
+        // Capture the error response in case of network issues
+        if (error.response) {
+          alert(error.response.data.message || 'An error occurred during signup.');
+        } else {
+          alert('An error occurred during signup.');
+        }
+        console.error('Error:', error);
+      }
     }
-    ;
   };
+  
+  
+  
 
   return (
     <div className="App">

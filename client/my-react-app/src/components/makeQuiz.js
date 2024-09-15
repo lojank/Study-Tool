@@ -2,138 +2,219 @@ import './makeQuiz.css';
 import React from 'react';
 
 function MakeQuiz() {
-    const [questions, setQuestions] = React.useState([{id: 1, choices: ['A', 'B']}]);
-    function AddNewQuestion() {
-        const newQuestions = { id: questions.length + 1, choices: ['A', 'B'] };
-        setQuestions(prevQuestions => {
-            return [...prevQuestions,newQuestions]
-    }) 
-        
-    }
-    const removeQuestion = (indexToRemove) => {
-        const newQuestions = questions.filter((_, index) => index !== indexToRemove);
-        setQuestions(newQuestions);
-    };
-    
-    
-    const [choices, setChoices] = React.useState(['A','B']);
-    function AddNewChoice(index) {
-        const alp = ['A', 'B', 'C', 'D', 'E'];
-        setQuestions(prevQuestions => {
-            const newQuestions = [...prevQuestions];
-            const currentChoices = newQuestions[index].choices;
-            if (currentChoices.length < alp.length) {
-                newQuestions[index].choices = [...currentChoices, alp[currentChoices.length]];
-            }
-            return newQuestions;
-        });
-    }
-
-        
-    
-    const ch = ['first','second','third','fourth','fifth'];
-    return (
-      <div className='quizPage'>
-        <nav className='nav'>
-        <h2 className="quizName">
-            <span className="Quiz">Quiz</span> <span className="builder">Builder</span>
-        </h2>
-          <button className='saveButton'>Save</button>
-          <img className="iconPic" src="https://cdn-icons-png.flaticon.com/512/566/566985.png"/>
-        </nav>
-
-        <div className="container">
-            <div className="badge">1</div>
-            <span className="label">Quiz Name: </span>
-            <input
-            className="input"
-            placeholder="Enter the Name of the quiz..."
-        />
-    
-</div>
-
-        <div className="container2">
-            <div className='wrapper'>
-            <div className="badge2">2</div>
-            <span className="label2">Quiz Questions: </span>
-            </div>
-        {questions.map((question,index) =>(
-            <div>
-            <div className="question-container">
-        <div className='wrap'>        
-        <div className="question-label">
-          <span>Question </span>
-          <span>{question.id}</span>
-        </div>
-        <textarea
-          className="question-input"
-          placeholder="Your Question Here ..."
-        />
-        </div>
-        
-
-        {(questions.length-1 === index) && <img
-            src='https://thumb.ac-illust.com/82/828fbf80368cff42f9de6c0f594bd6eb_t.jpeg'
-            className='xButton'
-            alt="Remove"
-            onClick={() => removeQuestion(index)}
-        />}
-        <div className='wrap2'>
-        <div className="choices-label">
-          <span>Choices </span>
-        </div>
-        
-        <div className='choiceCon'>
-            
-            {question.choices.map((choice, choiceIndex) => (
-            <div className='now'>
-            <span className='labelA'>{choice}:</span>
-            <input
-              className="choice-input2"
-              placeholder={`Add Your ${ch[choiceIndex]} Choice`}
-            />
-            </div>
-            ))}
-            <div className='wrapChoice'>
-            <button className='addChoice' onClick={() => AddNewChoice(index)}>Add a New Choice</button>
-
-            </div>
-        
+  const [quizName, setQuizName] = React.useState('');
+  const [questions, setQuestions] = React.useState([{ id: 1, text: '', choices: ['', ''], correctAnswer: '' }]);
+  const [errorMessage, setErrorMessage] = React.useState(''); // State to manage error messages
+  const arr = ['A', 'B', 'C', 'D', 'E'];
   
-        </div>
-            
-        </div>
+  function handleQuizNameChange(event) {
+    setQuizName(event.target.value);
+    setErrorMessage(''); // Clear error message on input change
+  }
 
-        {(questions.length-1 == index) && <img
-            src='https://thumb.ac-illust.com/82/828fbf80368cff42f9de6c0f594bd6eb_t.jpeg'
-            className='xButton'
-            alt="Remove"
-            onClick={() => removeQuestion(index)}
-        />}
-        
-    
-        
-       </div>
+  function handleQuestionChange(index, event) {
+    const newQuestions = [...questions];
+    newQuestions[index].text = event.target.value;
+    setQuestions(newQuestions);
+    setErrorMessage(''); // Clear error message on input change
+  }
 
-      
+  function handleChoiceChange(questionIndex, choiceIndex, event) {
+    const newQuestions = [...questions];
+    newQuestions[questionIndex].choices[choiceIndex] = event.target.value;
+    setQuestions(newQuestions);
+    setErrorMessage(''); // Clear error message on input change
+  }
 
-    </div>
+  function handleCorrectAnswerChange(index, event) {
+    const newQuestions = [...questions];
+    newQuestions[index].correctAnswer = event.target.value.toUpperCase(); // Ensure the input is in uppercase
+    setQuestions(newQuestions);
+    setErrorMessage(''); // Clear error message on input change
+  }
 
-    
-    
-    
+  function AddNewQuestion() {
+    setErrorMessage(''); // Clear error message on input change
+    const newQuestions = { id: questions.length + 1, text: '', choices: ['', ''], correctAnswer: '' };
+    setQuestions((prevQuestions) => [...prevQuestions, newQuestions]);
+  }
 
-        ))}
-            
-    <div className='addButton'>
-        <button className='addQues' onClick={AddNewQuestion}>Add a New Question</button>
-    </div>
-    
-        </div>
+  function AddNewChoice(index) {
+    setErrorMessage(''); // Clear error message on input change
+    setQuestions((prevQuestions) => {
+      const newQuestions = [...prevQuestions];
+      const currentChoices = newQuestions[index].choices;
+      if (currentChoices.length < arr.length) {
+        newQuestions[index].choices = [...currentChoices, ''];
+      }
+      return newQuestions;
+    });
+  }
 
+  const removeQuestion = (indexToRemove) => {
+    const newQuestions = questions.filter((_, index) => index !== indexToRemove);
+    setQuestions(newQuestions);
+  };
+
+  const removeChoice = (questionIndex, choiceIndex) => {
+    setQuestions((prevQuestions) => {
+      const newQuestions = [...prevQuestions];
+      newQuestions[questionIndex].choices = newQuestions[questionIndex].choices.filter((_, index) => index !== choiceIndex);
+      return newQuestions;
+    });
+  };
+
+  function handleSave() {
+    if (!isFormValid()) {
+      setErrorMessage('Please fill out all fields before saving the quiz.');
+      return;
+    }
+
+    // Clear error message when form is valid
+    setErrorMessage('');
+
+    let quizInfo = `Quiz Name: ${quizName}\n\nQuestions:\n`;
+
+    questions.forEach((question, index) => {
+      quizInfo += `\nQuestion ${index + 1}: ${question.text}\nChoices:\n`;
+      question.choices.forEach((choice, choiceIndex) => {
+        quizInfo += `  ${arr[choiceIndex]}: ${choice}\n`;
+      });
+      quizInfo += `Correct Answer: ${question.correctAnswer}\n`; // Include correct answer
+    });
+
+    alert(quizInfo);
+  }
+
+  // Validation function to check if all fields are filled
+  function isFormValid() {
+    if (!quizName.trim()) return false; // Check if quiz name is filled
+
+    for (let question of questions) {
+      if (!question.text.trim()) return false; // Check if question text is filled
+      for (let choice of question.choices) {
+        if (!choice.trim()) return false; // Check if every choice is filled
+      }
+      if (!arr.includes(question.correctAnswer)) { // Check if the correct answer is one of A, B, C, D, E
+        setErrorMessage(`Correct answer for Question ${question.id} must be one of A, B, C, D, or E.`);
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  const ch = ['first', 'second', 'third', 'fourth', 'fifth'];
+
+  return (
+    <div className='quizPage'>
+      <nav className='nav'>
+        <h2 className="quizName">
+          <span className="Quiz">Quiz</span> <span className="builder">Builder</span>
+        </h2>
+        <button
+          className='saveButton'
+          onClick={handleSave}
+        >
+          Save
+        </button>
+        <img className="iconPic" src="https://cdn-icons-png.flaticon.com/512/566/566985.png" alt="icon" />
+      </nav>
+
+      <div className="container">
+        <div className="badge">1</div>
+        <span className="label">Quiz Name: </span>
+        <input
+          className="input"
+          value={quizName}
+          onChange={handleQuizNameChange}
+          placeholder="Enter the Name of the quiz..."
+        />
       </div>
-    );
-}
 
+      <div className="container2">
+        <div className='wrapper'>
+          <div className="badge2">2</div>
+          <span className="label2">Quiz Questions: </span>
+        </div>
+        {questions.map((question, index) => (
+          <div key={index}>
+            <div className="question-container">
+              <div className='wrap'>
+                <div className="question-label">
+                  <span>Question </span>
+                  <span>{index+1}</span>
+                </div>
+                <textarea
+                  className="question-input"
+                  value={question.text}
+                  onChange={(e) => handleQuestionChange(index, e)}
+                  placeholder="Your Question Here ..."
+                />
+              </div>
+
+              {/* Render the delete button for all questions except the first one */}
+              {index > 0 && (
+                <img
+                  src='https://thumb.ac-illust.com/82/828fbf80368cff42f9de6c0f594bd6eb_t.jpeg'
+                  className='xButton'
+                  alt="Remove"
+                  onClick={() => removeQuestion(index)}
+                />
+              )}
+              
+              <div className='wrap2'>
+                <div className="choices-label">
+                  <span>Choices </span>
+                </div>
+
+                <div className='choiceCon'>
+                  {question.choices.map((choice, choiceIndex) => (
+                    <div className='now' key={choiceIndex}>
+                      <span className='labelA'>{arr[choiceIndex]}:</span>
+                      <input
+                        className="choice-input2"
+                        value={choice}
+                        onChange={(e) => handleChoiceChange(index, choiceIndex, e)}
+                        placeholder={`Add Your ${ch[choiceIndex]} Choice`}
+                      />
+                      {/* Render delete button for choices except A and B */}
+                      {choiceIndex > 1 && (
+                        <button className='deleteChoice' onClick={() => removeChoice(index, choiceIndex)}>Delete</button>
+                      )}
+                    </div>
+                  ))}
+                  <div className='wrapChoice'>
+                    <button className='addChoice' onClick={() => AddNewChoice(index)}>Add a New Choice</button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Input for Correct Answer */}
+              <div className='wrap5'>
+                <div className="question-label5">
+                  <span>Correct Answer</span>
+                </div>
+                <input
+                  className="question-input5"
+                  value={question.correctAnswer}
+                  onChange={(e) => handleCorrectAnswerChange(index, e)}
+                  placeholder="Add The Correct Answer Here ... EX: A, B, C, D, E"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+
+        <div className='addButton'>
+          <button className='addQues' onClick={AddNewQuestion}>Add a New Question</button>
+        </div>
+      </div>
+
+      {/* Display error message if form is not valid */}
+      {errorMessage && <div className="errorMessage">{errorMessage}</div>}
+    </div>
+  );
+}
 
 export default MakeQuiz;

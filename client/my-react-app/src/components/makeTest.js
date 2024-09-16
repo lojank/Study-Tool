@@ -7,7 +7,7 @@ function MakeTest() {
         <h2 className="webName">
             <span className="quiz">Quiz</span> <span className="shuffle">Shuffle</span>
         </h2>
-          <button className='log'>LogIn</button>
+          <button className='log'>Log Out</button>
           <img className="iconPic" src="https://cdn-icons-png.flaticon.com/512/566/566985.png"/>
         </nav>
         <h3 className="quizName"> My Quizzes</h3>

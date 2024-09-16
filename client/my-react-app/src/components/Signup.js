@@ -26,8 +26,10 @@ function Signup() {
         });
   
         if (response.data.status === true) {
+          localStorage.setItem('token', response.data.token);
+
           alert('Signup successful! Redirecting to homepage...');
-          navigate('/homePage');
+          navigate('/makeTest');
         }
       } catch (error) {
         // Capture the error response in case of network issues

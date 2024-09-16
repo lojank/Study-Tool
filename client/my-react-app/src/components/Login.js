@@ -30,8 +30,11 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
+        // Store JWT token in localStorage
+        localStorage.setItem('token', data.token);
+
         alert('Login successful! Redirecting...');
-        navigate('/homePage');
+        navigate('/makeTest');
         // Optionally, handle successful login (e.g., redirect or save token)
         // window.location.href = '/dashboard'; // Example redirection
       } else {

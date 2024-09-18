@@ -1,5 +1,6 @@
 import './makeQuiz.css';
 import React from 'react';
+import axios from 'axios';
 
 function MakeQuiz() {
   const [quizName, setQuizName] = React.useState('');
@@ -64,27 +65,40 @@ function MakeQuiz() {
     });
   };
 
-  function handleSave() {
-    if (!isFormValid()) {
-      setErrorMessage('Please fill out all fields before saving the quiz.');
-      return;
-    }
 
-    // Clear error message when form is valid
-    setErrorMessage('');
-
-    let quizInfo = `Quiz Name: ${quizName}\n\nQuestions:\n`;
-
-    questions.forEach((question, index) => {
-      quizInfo += `\nQuestion ${index + 1}: ${question.text}\nChoices:\n`;
-      question.choices.forEach((choice, choiceIndex) => {
-        quizInfo += `  ${arr[choiceIndex]}: ${choice}\n`;
-      });
-      quizInfo += `Correct Answer: ${question.correctAnswer}\n`; // Include correct answer
-    });
-
-    alert(quizInfo);
+function handleSave() {
+  if (!isFormValid()) {
+    setErrorMessage('Please fill out all fields before saving the quiz.');
+    return;
   }
+
+  // Clear error message when form is valid
+  setErrorMessage('');
+
+  const quizData = {
+    title: quizName,
+    questions: questions.map(question => ({
+      text: question.text,
+      choices: question.choices,
+      correctAnswer: question.correctAnswer
+    }))
+  };
+
+  // Send the quiz data to the backend
+  axios.post('http://localhost:5001/quiz', quizData, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming the token is stored in localStorage
+    }
+  })
+  .then(response => {
+    alert('Quiz saved successfully!');
+  }) 
+  .catch(error => {
+    setErrorMessage('Error saving quiz. Please try again.');
+    console.error('Error saving quiz:', error);
+  });
+}
+
 
   // Validation function to check if all fields are filled
   function isFormValid() {

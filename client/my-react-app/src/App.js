@@ -18,7 +18,7 @@ function App() {
           <Route path="/homePage" element={<HomePage />} />
           <Route path="/makeTest" element={<MakeTest />} />
           <Route path="/makeQuiz" element={<MakeQuiz />} />
-          <Route path="/test" element={<Test />} />
+          <Route path="/quiz/:quizId" element={<Test />} />
         </Routes>
 
       </div>

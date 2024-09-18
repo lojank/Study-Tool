@@ -1,91 +1,126 @@
-.nav {
+.Page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .nav {
     height: 10%;
-    display: flex;              /* Use flexbox for layout */
-    align-items: center;        /* Vertically center the items */
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Vertically center the items */
     justify-content: space-between; /* Push items to opposite ends */
-    padding: 0 20px;            /* Optional: Add some padding for spacing */
+    padding: 0 20px; /* Optional: Add some padding for spacing */
     margin-top: 15px;
-}
-
-.webName {
-    font-size: 1.3em;           /* Adjust as needed */
+  }
+  
+  .webName {
+    font-size: 1.3em; /* Adjust as needed */
     display: flex;
     align-items: center;
     padding-left: 50px; /* Ensure the text is vertically centered */
-    
-}
-
-.quiz {
+  }
+  
+  .quiz {
     color: black;
     margin-right: 5px;
-}
-
-.shuffle {
+  }
+  
+  .shuffle {
     color: #15803d;
-}
-
-.log {
+  }
+  
+  .log {
     background-color: #15803d;
     color: white;
-    padding: 10px 20px;         /* Add padding for better button size */
-    border: none;               /* Remove border */
-    border-radius: 5px;         /* Optional: Round the corners */
+    padding: 10px 20px; /* Add padding for better button size */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Optional: Round the corners */
     cursor: pointer;
-    width: 7%;            /* Change cursor on hover */
-}
-
-.page {
-    width: 100%;
-    height: 100%;
-}
-
-.Page {
-  width: 100%;
-  height: 100%;               /* Full viewport height */
-  display: flex;
-  flex-direction: column;
-}
-.iconPic {
+    width: 7%; /* Change cursor on hover */
+  }
+  
+  .iconPic {
     position: absolute;
     width: 40px;
-    height:40px;
+    height: 40px;
     padding-top: 10px;
-}
-
-.quizName {
+  }
+  
+  .quizName {
     font-weight: bold;
-    padding-left:22px;
-    padding-top:25px;
-}
-
-.plusBox {
+    padding-left: 22px;
+    padding-top: 25px;
+  }
+  
+  .main-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping of items if necessary */
+    gap: 20px; /* Space between items */
+    padding: 20px; /* Add padding around the list */
+  }
+  
+  .plusBox,
+  .quiz-item {
     cursor: pointer;
     justify-content: center;
     align-items: center;
-    border-radius: 10px;         /* Rounded corners */
-    width: 230px;                /* Set width */
-    height:250px;
-    display: flex;               /* Use flexbox */
-    flex-direction: column;      /* Stack items vertically */
-    border: 1px solid #e5e7eb;   /* Light gray border */
-    background-color: white;     /* White background */
-    padding: 16px;               /* Padding inside the element */
-    margin-left: 22px; 
-}
-
-.plusIcon {
-    width: 250px;   /* Set width */
-    height: 250px;  /* Set height */
-}
-.add-new-quiz {
-    user-select: none;   /* Prevents the text from being selectable */
-    opacity: 0.4;        /* Sets the opacity to 40% */
-    font-weight: bold;         /* Makes the text bold */
-    color: #333;               /* Sets the text color */
-    cursor: pointer;           /* Changes the cursor to a pointer on hover */
-    transition: opacity 0.3s;  /* Adds a transition effect for opacity changes */
-    /* You can add more styles here if needed */
-}
-.add-new-quiz:hover {
+    border-radius: 10px; /* Rounded corners */
+    width: 230px; /* Set width */
+    height: 250px; /* Set height */
+    display: flex; /* Use flexbox */
+    flex-direction: column; /* Stack items vertically */
+    border: 1px solid #e5e7eb; /* Light gray border */
+    background-color: white; /* White background */
+    padding: 16px; /* Padding inside the element */
+    transition: box-shadow 0.3s, transform 0.3s; /* Transition effect */
+  }
+  
+  .plusIcon {
+    width: 250px; /* Set width */
+    height: 250px; /* Set height */
+  }
+  
+  .add-new-quiz {
+    user-select: none; /* Prevents the text from being selectable */
+    opacity: 0.4; /* Sets the opacity to 40% */
+    font-weight: bold; /* Makes the text bold */
+    color: #333; /* Sets the text color */
+    cursor: pointer; /* Changes the cursor to a pointer on hover */
+    transition: opacity 0.3s; /* Adds a transition effect for opacity changes */
+  }
+  
+  .add-new-quiz:hover {
     opacity: 0.6; /* Increases opacity on hover */
-}
+  }
+  
+  .quiz-item {
+    cursor: pointer; /* Make the quiz items clickable */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    border-radius: 10px; /* Rounded corners */
+    width: 230px; /* Set width */
+    height: 250px; /* Set height to match the add-quiz box */
+    display: flex; /* Use flexbox */
+    flex-direction: column; /* Stack items vertically */
+    border: 1px solid #e5e7eb; /* Light gray border */
+    background-color: white; /* White background */
+    padding: 16px; /* Padding inside the element */
+    transition: box-shadow 0.3s, transform 0.3s; /* Transition effect */
+  }
+  
+  .quiz-item h4 {
+    margin-bottom: 10px; /* Add some space below the quiz title */
+    font-weight: bold; /* Make the quiz title bold */
+  }
+  
+  .quiz-item p {
+    opacity: 0.6; /* Make the description slightly faded */
+    text-align: center; /* Center the description */
+  }
+  
+  .quiz-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow on hover */
+    transform: translateY(-5px); /* Slight move-up effect on hover */
+  }
+  

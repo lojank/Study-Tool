@@ -5,12 +5,18 @@ const pool = require('./db'); // Database connection (we'll set this up below)
 const bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
+
+
 const secretKey = 'yourSecretKey'; // Keep this secret and secure
+const arr = ['A', 'B', 'C', 'D', 'E'];
 
 // Middleware
 app.use(cors());
 app.use(express.json()); // Allows parsing JSON bodies from incoming requests
 app.use(bodyParser.json());
+
+
+
 
 
 const authenticateJWT = (req, res, next) => {
@@ -28,6 +34,139 @@ const authenticateJWT = (req, res, next) => {
     res.status(401).json({ message: 'Token missing' });
   }
 };
+
+app.get('/quiz/:quizId', authenticateJWT, async (req, res) => {
+  const { quizId } = req.params;
+
+  try {
+    const quiz = await pool.query('SELECT * FROM quizzes WHERE quiz_id = $1', [quizId]);
+    const questions = await pool.query('SELECT * FROM questions WHERE quiz_id = $1', [quizId]);
+
+    const quizData = {
+      quizTitle: quiz.rows[0].quiz_title,
+      questions: [],
+    }; 
+
+    for (const question of questions.rows) {
+      const answers = await pool.query('SELECT * FROM answers WHERE question_id = $1', [question.question_id]);
+
+      // Find the correct answer
+      const correctAnswer = answers.rows.find(a => a.is_correct);
+
+      if (!correctAnswer) {
+        console.error(`No correct answer found for question_id: ${question.question_id}`);
+        continue; // Skip this question if no correct answer is found
+      }
+
+      quizData.questions.push({
+        id: question.question_id,
+        questionText: question.question_text,
+        correctAnswerId: correctAnswer.answer_id, // Get correct answer ID
+        answers: answers.rows.map(answer => ({
+          answerId: answer.answer_id,
+          answerText: answer.answer_text,
+        })),
+      });
+    }
+
+    res.json(quizData);
+  } catch (err) {
+    console.error('Error fetching quiz:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+
+// Endpoint to handle quiz attempts
+app.post('/quiz/:quizId/attempt', authenticateJWT, async (req, res) => {
+  const { quizId } = req.params;
+  const { score, answers } = req.body; // answers is an array of objects { questionId, selectedAnswerId }
+  const userId = req.user.user_id;
+
+  try { 
+    // Insert a new quiz attempt
+    const attemptResult = await pool.query(
+      'INSERT INTO user_quiz_attempts (user_id, quiz_id, score) VALUES ($1, $2, $3) RETURNING attempt_id',
+      [userId, quizId, score]
+    );
+    const attemptId = attemptResult.rows[0].attempt_id;
+
+    // Insert each answer the user selected
+    for (const answer of answers) {
+      await pool.query(
+        'INSERT INTO user_answers (attempt_id, question_id, answer_id) VALUES ($1, $2, $3)',
+        [attemptId, answer.questionId, answer.selectedAnswerId]
+      );
+    } 
+
+    res.status(201).json({ message: 'Quiz attempt saved successfully' });
+  } catch (err) {
+    console.error('Error saving quiz attempt:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+// Example route to get all quizzes by the authenticated user
+app.get('/user/quizzes', authenticateJWT, async (req, res) => {
+  const userId = req.user.user_id; // Extract user_id from JWT token
+
+  try {
+    const quizzes = await pool.query('SELECT * FROM quizzes WHERE user_id = $1', [userId]);
+    res.json(quizzes.rows);
+  } catch (err) {
+    console.error('Error fetching quizzes:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+// Create a new quiz
+// Define choice labels array
+
+
+
+// Endpoint to handle quiz creation
+app.post('/quiz', authenticateJWT, async (req, res) => {
+  const { title, questions } = req.body;
+  const userId = req.user.user_id; // Extract user_id from JWT token
+
+  try {
+    // Insert quiz into quizzes table
+    const quizResult = await pool.query(
+      'INSERT INTO quizzes (user_id, quiz_title) VALUES ($1, $2) RETURNING quiz_id',
+      [userId, title]
+    );
+    const quizId = quizResult.rows[0].quiz_id;
+
+    // Insert each question and its answers
+    for (const question of questions) {
+      const questionResult = await pool.query(
+        'INSERT INTO questions (quiz_id, question_text) VALUES ($1, $2) RETURNING question_id',
+        [quizId, question.text]
+      );
+      const questionId = questionResult.rows[0].question_id;
+
+      // Insert each choice for the question
+      for (let i = 0; i < question.choices.length; i++) {
+        const answerText = question.choices[i];
+        const isCorrect = arr[i] === question.correctAnswer;
+
+        await pool.query(
+          'INSERT INTO answers (question_id, answer_text, is_correct) VALUES ($1, $2, $3)',
+          [questionId, answerText, isCorrect]
+        );
+      }
+    }
+
+    res.status(201).json({ message: 'Quiz created successfully' });
+  } catch (err) {
+    console.error('Error creating quiz:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 
 // Signup endpoint
 app.post('/signup', async (req, res) => {

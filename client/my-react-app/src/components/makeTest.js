@@ -5,31 +5,40 @@ import { useNavigate } from 'react-router-dom';
 
 function MakeTest() {
   const [quizzes, setQuizzes] = useState([]);
+  const [username, setUsername] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   // Fetch quizzes from the server when the component mounts
-  useEffect(() => {
-    const fetchQuizzes = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5001/user/quizzes', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setQuizzes(response.data);
-      } catch (err) {
-        console.error('Error fetching quizzes:', err);
-        setError('Failed to load quizzes. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
+// Fetch quizzes and username from the server when the component mounts
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem('token');
 
-    fetchQuizzes();
-  }, []);
+      const [quizzesResponse, userResponse] = await Promise.all([
+        axios.get('http://localhost:5001/user/quizzes', {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.get('http://localhost:5001/user', {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+
+      setQuizzes(quizzesResponse.data);
+      setUsername(userResponse.data.username);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError('Failed to load data. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
+
 
   // Handle quiz selection
   const handleQuizClick = (quizId) => {
@@ -70,7 +79,10 @@ function MakeTest() {
         <h2 className="webName">
           <span className="quiz">Quiz</span> <span className="shuffle">Shuffle</span>
         </h2>
-        <button className='log' onClick={handleLogout}>Log Out</button>
+        <div className='welcome-container'>
+          <span className='username'>Welcome {username}</span>
+          <button className='log' onClick={handleLogout}>Log Out</button>
+        </div>  
         <img className="iconPic" src="https://cdn-icons-png.flaticon.com/512/566/566985.png" alt="icon" />
       </nav>
 

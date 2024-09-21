@@ -59,6 +59,11 @@ function MakeTest() {
     navigate('/'); // Redirect to the login page
   };
 
+  // Navigate to the make quiz page
+  const handleAddQuizClick = () => {
+    navigate('/makeQuiz'); // This should be the route where "MakeQuiz" page is located
+  };
+
   return (
     <div className='Page'>
       <nav className='nav'>
@@ -72,7 +77,7 @@ function MakeTest() {
       <h3 className="quizName">My Quizzes</h3>
 
       <div className="main-container">
-        <div className="plusBox">
+        <div className="plusBox" onClick={handleAddQuizClick}>
           <img src="https://wumbo.net/symbols/plus/feature.png" className='plusIcon' alt="Add Quiz" />
           <span className="add-new-quiz">Add a new Quiz</span>
         </div>
@@ -101,4 +106,5 @@ function MakeTest() {
 }
 
 export default MakeTest;
+
 

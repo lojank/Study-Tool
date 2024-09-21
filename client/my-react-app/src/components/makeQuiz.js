@@ -1,13 +1,15 @@
 import './makeQuiz.css';
 import React from 'react';
 import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 
 function MakeQuiz() {
   const [quizName, setQuizName] = React.useState('');
   const [questions, setQuestions] = React.useState([{ id: 1, text: '', choices: ['', ''], correctAnswer: '' }]);
   const [errorMessage, setErrorMessage] = React.useState(''); // State to manage error messages
   const arr = ['A', 'B', 'C', 'D', 'E'];
-  
+  const navigate = useNavigate();
+
   function handleQuizNameChange(event) {
     setQuizName(event.target.value);
     setErrorMessage(''); // Clear error message on input change
@@ -92,6 +94,8 @@ function handleSave() {
   })
   .then(response => {
     alert('Quiz saved successfully!');
+    navigate('/makeTest');
+    
   }) 
   .catch(error => {
     setErrorMessage('Error saving quiz. Please try again.');

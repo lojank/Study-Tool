@@ -251,6 +251,30 @@ app.get('/users', async (req, res) => {
     console.error(err.message);
   }
 });
+app.delete('/quiz/:quizId', authenticateJWT, async (req, res) => {
+  const { quizId } = req.params;
+  try {
+    // Delete from user_answers table
+    await pool.query('DELETE FROM user_answers WHERE question_id IN (SELECT question_id FROM questions WHERE quiz_id = $1)', [quizId]);
+
+    // Delete from answers table
+    await pool.query('DELETE FROM answers WHERE question_id IN (SELECT question_id FROM questions WHERE quiz_id = $1)', [quizId]);
+
+    // Delete from questions table
+    await pool.query('DELETE FROM questions WHERE quiz_id = $1', [quizId]);
+
+    // Delete from user_quiz_attempts table
+    await pool.query('DELETE FROM user_quiz_attempts WHERE quiz_id = $1', [quizId]);
+
+    // Finally, delete the quiz from quizzes table
+    await pool.query('DELETE FROM quizzes WHERE quiz_id = $1', [quizId]);
+
+    res.status(204).send(); // No content to send back
+  } catch (err) {
+    console.error('Error deleting quiz:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
 // Listen on a port
 const port = process.env.PORT || 5001; 

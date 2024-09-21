@@ -121,6 +121,18 @@ app.get('/user/quizzes', authenticateJWT, async (req, res) => {
   }
 });
 
+app.get('/user', authenticateJWT, async (req, res) => {
+  const userId = req.user.user_id; // Extract user_id from JWT token
+
+  try {
+    const quizzes = await pool.query('SELECT username FROM users WHERE user_id = $1', [userId]);
+    res.json(quizzes.rows[0]);
+  } catch (err) {
+    console.error('Error fetching quizzes:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 
 // Create a new quiz
 // Define choice labels array
@@ -299,4 +311,4 @@ app.listen(port, ()=> console.log(`Server Started on port ${port}...`))
 //   } catch (error) {
 //     console.error('Error fetching user data:', error);
 //   }
-// };
+// }; 

@@ -123,4 +123,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow on hover */
     transform: translateY(-5px); /* Slight move-up effect on hover */
   }
+  .delete-btn {
+    z-index: 0;
+  }
   

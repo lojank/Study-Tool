@@ -76,6 +76,50 @@ app.get('/quiz/:quizId', authenticateJWT, async (req, res) => {
   }
 });
 
+// Update an existing quiz
+app.put('/quiz/:quizId', authenticateJWT, async (req, res) => {
+  const { quizId } = req.params;
+  const { title, questions } = req.body;
+
+  try {
+    // Update the quiz title
+    await pool.query('UPDATE quizzes SET quiz_title = $1 WHERE quiz_id = $2', [title, quizId]);
+
+    // Remove existing questions and their answers
+    await pool.query('DELETE FROM answers WHERE question_id IN (SELECT question_id FROM questions WHERE quiz_id = $1)', [quizId]);
+    await pool.query('DELETE FROM questions WHERE quiz_id = $1', [quizId]);
+
+    // Insert new questions and answers
+    for (const question of questions) {
+      // Insert the new question and get its ID
+      const result = await pool.query(
+        'INSERT INTO questions (quiz_id, question_text) VALUES ($1, $2) RETURNING question_id',
+        [quizId, question.text]
+      );
+      const questionId = result.rows[0].question_id;
+
+      // Insert answers for the new question
+      for (const choice of question.choices) {
+        const isCorrect = (choice === question.correctAnswer); // Check if choice matches the correct answer text
+
+        await pool.query(
+          'INSERT INTO answers (question_id, answer_text, is_correct) VALUES ($1, $2, $3)',
+          [questionId, choice, isCorrect]
+        );
+      }
+    }
+
+    res.status(200).json({ message: 'Quiz updated successfully' });
+  } catch (err) {
+    console.error('Error updating quiz:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+
+
+
 
 
 // Endpoint to handle quiz attempts

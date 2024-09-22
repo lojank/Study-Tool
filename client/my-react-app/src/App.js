@@ -7,7 +7,7 @@ import HomePage from './components/homePage';
 import MakeTest from './components/makeTest';
 import MakeQuiz from './components/makeQuiz';
 import Test from './components/Test'
-
+import NewMakeQuiz from './components/newMakeQuiz'
 function App() {
   return (
     <Router>
@@ -19,6 +19,7 @@ function App() {
           <Route path="/makeTest" element={<MakeTest />} />
           <Route path="/makeQuiz" element={<MakeQuiz />} />
           <Route path="/quiz/:quizId" element={<Test />} />
+          <Route path="/newMakeQuiz/:quizId" element={<NewMakeQuiz />} />
         </Routes>
 
       </div>

@@ -99,12 +99,13 @@ app.put('/quiz/:quizId', authenticateJWT, async (req, res) => {
       const questionId = result.rows[0].question_id;
 
       // Insert answers for the new question
-      for (const choice of question.choices) {
-        const isCorrect = (choice === question.correctAnswer); // Check if choice matches the correct answer text
+      for (let i = 0; i < question.choices.length; i++) {
+        const answerText = question.choices[i];
+        const isCorrect = arr[i] === question.correctAnswer;
 
         await pool.query(
           'INSERT INTO answers (question_id, answer_text, is_correct) VALUES ($1, $2, $3)',
-          [questionId, choice, isCorrect]
+          [questionId, answerText, isCorrect]
         );
       }
     }
@@ -115,7 +116,6 @@ app.put('/quiz/:quizId', authenticateJWT, async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
 
 
 

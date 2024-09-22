@@ -5,49 +5,45 @@ import { useNavigate } from 'react-router-dom';
 
 function MakeTest() {
   const [quizzes, setQuizzes] = useState([]);
-  const [username, setUsername] = useState([]);
+  const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Fetch quizzes from the server when the component mounts
-// Fetch quizzes and username from the server when the component mounts
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const token = localStorage.getItem('token');
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token');
 
-      const [quizzesResponse, userResponse] = await Promise.all([
-        axios.get('http://localhost:5001/user/quizzes', {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get('http://localhost:5001/user', {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-      ]);
+        const [quizzesResponse, userResponse] = await Promise.all([
+          axios.get('http://localhost:5001/user/quizzes', {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get('http://localhost:5001/user', {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
 
-      setQuizzes(quizzesResponse.data);
-      setUsername(userResponse.data.username);
-    } catch (err) {
-      console.error('Error fetching data:', err);
-      setError('Failed to load data. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
-  };
+        setQuizzes(quizzesResponse.data);
+        setUsername(userResponse.data.username);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to load data. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchData();
-}, []);
+    fetchData();
+  }, []);
 
 
-  // Handle quiz selection
   const handleQuizClick = (quizId) => {
     navigate(`/quiz/${quizId}`);
   };
 
-  // Handle quiz deletion
   const handleDelete = async (event, quizId) => {
-    event.stopPropagation(); // Stop the click event from bubbling up
+    event.stopPropagation();
     const token = localStorage.getItem('token');
     try {
       await axios.delete(`http://localhost:5001/quiz/${quizId}`, {
@@ -55,22 +51,25 @@ useEffect(() => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setQuizzes((prevQuizzes) => prevQuizzes.filter((quiz) => quiz.quiz_id !== quizId)); // Update the state to remove the deleted quiz
+      setQuizzes((prevQuizzes) => prevQuizzes.filter((quiz) => quiz.quiz_id !== quizId));
     } catch (err) {
       console.error('Error deleting quiz:', err);
       setError('Failed to delete quiz. Please try again later.');
     }
   };
 
-  // Handle logout
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Clear the token from local storage
-    navigate('/'); // Redirect to the login page
+    localStorage.removeItem('token');
+    navigate('/');
   };
 
-  // Navigate to the make quiz page
+  // Navigate to the edit quiz page with the quizId
+  const handleEdit = (quizId) => {
+    navigate(`/newMakeQuiz/${quizId}`); // Include quizId in the URL
+  };
+
   const handleAddQuizClick = () => {
-    navigate('/makeQuiz'); // This should be the route where "MakeQuiz" page is located
+    navigate('/makeQuiz');
   };
 
   return (
@@ -82,7 +81,7 @@ useEffect(() => {
         <div className='welcome-container'>
           <span className='username'>Welcome {username}</span>
           <button className='log' onClick={handleLogout}>Log Out</button>
-        </div>  
+        </div>
         <img className="iconPic" src="https://cdn-icons-png.flaticon.com/512/566/566985.png" alt="icon" />
       </nav>
 
@@ -104,6 +103,10 @@ useEffect(() => {
                 <h4>{quiz.quiz_title}</h4>
                 <p>{quiz.description}</p>
                 <button className="delete-btn" onClick={(event) => handleDelete(event, quiz.quiz_id)}>Delete</button>
+                <button className="edit-btn" onClick={(event) => {
+                  event.stopPropagation(); // Prevent triggering the quiz click
+                  handleEdit(quiz.quiz_id); // Navigate to edit page
+                }}>Edit</button>
               </div>
             ))}
           </>
@@ -118,5 +121,10 @@ useEffect(() => {
 }
 
 export default MakeTest;
+
+
+
+
+
 
 

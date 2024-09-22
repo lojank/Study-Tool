@@ -37,6 +37,7 @@ function MakeTest() {
     fetchData();
   }, []);
 
+
   const handleQuizClick = (quizId) => {
     navigate(`/quiz/${quizId}`);
   };

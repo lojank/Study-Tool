@@ -11,6 +11,7 @@ const NewMakeQuiz = () => {
   const navigate = useNavigate();
   const { quizId } = useParams();
 
+  
   useEffect(() => {
     const fetchQuizData = async () => {
       if (quizId) {
@@ -244,7 +245,6 @@ const NewMakeQuiz = () => {
 }
 
 export default NewMakeQuiz;
-
 
 
 

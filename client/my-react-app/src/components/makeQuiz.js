@@ -68,59 +68,65 @@ function MakeQuiz() {
   };
 
 
-function handleSave() {
-  if (!isFormValid()) {
-    setErrorMessage('Please fill out all fields before saving the quiz.');
-    return;
+  function handleSave() {
+    if (!isFormValid()) {
+      setErrorMessage('Please fill out all fields and provide valid answers before saving the quiz.');
+      return;
+    }
+  
+    // Clear error message when form is valid
+    setErrorMessage('');
+  
+    const quizData = {
+      title: quizName,
+      questions: questions.map(question => ({
+        text: question.text,
+        choices: question.choices,
+        correctAnswer: question.correctAnswer
+      }))
+    };
+  
+    // Send the quiz data to the backend
+    axios.post('http://localhost:5001/quiz', quizData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming the token is stored in localStorage
+      }
+    })
+    .then(response => {
+      alert('Quiz saved successfully!');
+      navigate('/makeTest');
+    }) 
+    .catch(error => {
+      setErrorMessage('Error saving quiz. Please try again.');
+      console.error('Error saving quiz:', error);
+    });
+  }
+  
+
+
+// Validation function to check if all fields are filled and correct answer is valid
+function isFormValid() {
+  if (!quizName.trim()) return false; // Check if quiz name is filled
+
+  for (let question of questions) {
+    if (!question.text.trim()) return false; // Check if question text is filled
+    
+    // Check if every choice is filled
+    for (let choice of question.choices) {
+      if (!choice.trim()) return false;
+    }
+
+    // Ensure correct answer is within the bounds of available choices
+    const correctAnswerIndex = arr.indexOf(question.correctAnswer);
+    if (correctAnswerIndex === -1 || correctAnswerIndex >= question.choices.length) {
+      setErrorMessage(`Correct answer for Question ${question.id} must match one of the available choices (A, B, C, D, or E).`);
+      return false;
+    }
   }
 
-  // Clear error message when form is valid
-  setErrorMessage('');
-
-  const quizData = {
-    title: quizName,
-    questions: questions.map(question => ({
-      text: question.text,
-      choices: question.choices,
-      correctAnswer: question.correctAnswer
-    }))
-  };
-
-  // Send the quiz data to the backend
-  axios.post('http://localhost:5001/quiz', quizData, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming the token is stored in localStorage
-    }
-  })
-  .then(response => {
-    alert('Quiz saved successfully!');
-    navigate('/makeTest');
-    
-  }) 
-  .catch(error => {
-    setErrorMessage('Error saving quiz. Please try again.');
-    console.error('Error saving quiz:', error);
-  });
+  return true;
 }
 
-
-  // Validation function to check if all fields are filled
-  function isFormValid() {
-    if (!quizName.trim()) return false; // Check if quiz name is filled
-
-    for (let question of questions) {
-      if (!question.text.trim()) return false; // Check if question text is filled
-      for (let choice of question.choices) {
-        if (!choice.trim()) return false; // Check if every choice is filled
-      }
-      if (!arr.includes(question.correctAnswer)) { // Check if the correct answer is one of A, B, C, D, E
-        setErrorMessage(`Correct answer for Question ${question.id} must be one of A, B, C, D, or E.`);
-        return false;
-      }
-    }
-
-    return true;
-  }
 
   const ch = ['first', 'second', 'third', 'fourth', 'fifth'];
 

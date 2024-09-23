@@ -61,7 +61,7 @@ app.get('/quiz/:quizId', authenticateJWT, async (req, res) => {
       quizData.questions.push({
         id: question.question_id,
         questionText: question.question_text,
-        correctAnswerId: correctAnswer.answer_id, // Get correct answer ID
+        correctAnswerId: correctAnswer.answer_option, // Get correct answer ID
         answers: answers.rows.map(answer => ({
           answerId: answer.answer_id,
           answerText: answer.answer_text,
@@ -80,12 +80,13 @@ app.get('/quiz/:quizId', authenticateJWT, async (req, res) => {
 app.put('/quiz/:quizId', authenticateJWT, async (req, res) => {
   const { quizId } = req.params;
   const { title, questions } = req.body;
+  const arr = ['A', 'B', 'C', 'D', 'E']; // Answer options
 
   try {
     // Update the quiz title
     await pool.query('UPDATE quizzes SET quiz_title = $1 WHERE quiz_id = $2', [title, quizId]);
 
-    // Remove existing questions and their answers
+    // Remove existing questions and their answers 
     await pool.query('DELETE FROM answers WHERE question_id IN (SELECT question_id FROM questions WHERE quiz_id = $1)', [quizId]);
     await pool.query('DELETE FROM questions WHERE quiz_id = $1', [quizId]);
 
@@ -98,14 +99,15 @@ app.put('/quiz/:quizId', authenticateJWT, async (req, res) => {
       );
       const questionId = result.rows[0].question_id;
 
-      // Insert answers for the new question
+      // Insert answers for the new question with answer options (A, B, C, D, E)
       for (let i = 0; i < question.choices.length; i++) {
         const answerText = question.choices[i];
-        const isCorrect = arr[i] === question.correctAnswer;
+        const isCorrect = arr[i] === question.correctAnswer; // Check if the choice matches the correct answer
+        const answerOption = arr[i]; // Set the answer option (A, B, C, D, E)
 
         await pool.query(
-          'INSERT INTO answers (question_id, answer_text, is_correct) VALUES ($1, $2, $3)',
-          [questionId, answerText, isCorrect]
+          'INSERT INTO answers (question_id, answer_text, is_correct, answer_option) VALUES ($1, $2, $3, $4)',
+          [questionId, answerText, isCorrect, answerOption]
         );
       }
     }
@@ -116,10 +118,6 @@ app.put('/quiz/:quizId', authenticateJWT, async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
-
-
-
 
 
 // Endpoint to handle quiz attempts
@@ -187,6 +185,7 @@ app.get('/user', authenticateJWT, async (req, res) => {
 app.post('/quiz', authenticateJWT, async (req, res) => {
   const { title, questions } = req.body;
   const userId = req.user.user_id; // Extract user_id from JWT token
+  const arr = ['A', 'B', 'C', 'D', 'E']; // Answer options
 
   try {
     // Insert quiz into quizzes table
@@ -204,14 +203,15 @@ app.post('/quiz', authenticateJWT, async (req, res) => {
       );
       const questionId = questionResult.rows[0].question_id;
 
-      // Insert each choice for the question
+      // Insert each choice for the question with the answer option (A, B, C, D, E)
       for (let i = 0; i < question.choices.length; i++) {
         const answerText = question.choices[i];
         const isCorrect = arr[i] === question.correctAnswer;
+        const answerOption = arr[i]; // Set answer option (A, B, C, D, E)
 
         await pool.query(
-          'INSERT INTO answers (question_id, answer_text, is_correct) VALUES ($1, $2, $3)',
-          [questionId, answerText, isCorrect]
+          'INSERT INTO answers (question_id, answer_text, is_correct, answer_option) VALUES ($1, $2, $3, $4)',
+          [questionId, answerText, isCorrect, answerOption]
         );
       }
     }
@@ -222,6 +222,7 @@ app.post('/quiz', authenticateJWT, async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
 
 
 // Signup endpoint
@@ -335,24 +336,3 @@ app.delete('/quiz/:quizId', authenticateJWT, async (req, res) => {
 // Listen on a port
 const port = process.env.PORT || 5001; 
 app.listen(port, ()=> console.log(`Server Started on port ${port}...`))
-
-// Verify token example
-// const fetchUserData = async () => {
-//   const token = localStorage.getItem('token'); // Retrieve JWT from localStorage
-//   if (!token) {
-//     alert('User is not logged in');
-//     return;
-//   }
-
-//   try {
-//     const response = await axios.get('http://localhost:5001/user-info', {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-
-//     console.log('User data:', response.data);
-//   } catch (error) {
-//     console.error('Error fetching user data:', error);
-//   }
-// }; 

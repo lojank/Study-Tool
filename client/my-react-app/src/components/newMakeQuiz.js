@@ -1,7 +1,7 @@
 import './newMakeQuiz.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const NewMakeQuiz = () => {
   const [quizName, setQuizName] = useState('');
@@ -11,7 +11,6 @@ const NewMakeQuiz = () => {
   const navigate = useNavigate();
   const { quizId } = useParams();
 
-  
   useEffect(() => {
     const fetchQuizData = async () => {
       if (quizId) {
@@ -24,14 +23,15 @@ const NewMakeQuiz = () => {
 
           const { quizTitle, questions } = response.data;
 
-          // Populate state with existing quiz data
           setQuizName(quizTitle);
-          setQuestions(questions.map((question, index) => ({
-            id: question.id,
-            text: question.questionText,
-            choices: question.answers.map(answer => answer.answerText) || ['', ''],
-            correctAnswer: question.correctAnswerId,
-          })));
+          setQuestions(
+            questions.map((question) => ({
+              id: question.id,
+              text: question.questionText,
+              choices: question.answers.map(answer => answer.answerText) || ['', ''],
+              correctAnswer: question.correctAnswerId,
+            }))
+          );
         } catch (error) {
           setErrorMessage('Error fetching quiz data. Please try again.');
           console.error('Error fetching quiz data:', error);
@@ -61,13 +61,24 @@ const NewMakeQuiz = () => {
 
   const handleCorrectAnswerChange = (index, event) => {
     const newQuestions = [...questions];
-    newQuestions[index].correctAnswer = event.target.value.toUpperCase();
+    const correctAnswer = event.target.value.toUpperCase();
+  
+    // Update the input field with the user's input
+    newQuestions[index].correctAnswer = correctAnswer;
     setQuestions(newQuestions);
+  
+    // Check if the answer matches one of the available choices
+    if (!arr.slice(0, newQuestions[index].choices.length).includes(correctAnswer)) {
+      setErrorMessage(`Correct answer must match one of the available choices for Question ${index + 1}`);
+    } else {
+      setErrorMessage(''); // Clear the error message if the answer is valid
+    }
   };
+  
 
   const addNewQuestion = () => {
     const newQuestion = { id: questions.length + 1, text: '', choices: ['', ''], correctAnswer: '' };
-    setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+    setQuestions([...questions, newQuestion]);
   };
 
   const addNewChoice = (index) => {
@@ -108,7 +119,6 @@ const NewMakeQuiz = () => {
       })),
     };
 
-    // Send PUT request to update the quiz
     try {
       await axios.put(`http://localhost:5001/quiz/${quizId}`, quizData, {
         headers: {
@@ -131,14 +141,15 @@ const NewMakeQuiz = () => {
       for (let choice of question.choices) {
         if (!choice.trim()) return false;
       }
-      if (!arr.includes(question.correctAnswer)) {
-        setErrorMessage(`Correct answer for Question ${question.id} must be one of A, B, C, D, or E.`);
+      if (!arr.slice(0, question.choices.length).includes(question.correctAnswer)) {
+        setErrorMessage(`Correct answer for Question ${question.id} must match one of the available choices.`);
         return false;
       }
     }
 
     return true;
   };
+
 
   return (
     <div className='quizPage'>

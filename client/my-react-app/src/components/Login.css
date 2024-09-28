@@ -90,9 +90,12 @@
     justify-content: center;
     border: solid 1px black;
   }
-  .icon {
+  .icon10 {
     position: absolute;
-    height:80px;
+    margin-top: 10px;
+    margin-left: 10px;
+    height:40px;
+    width: 40px;
     z-index:0;
     
   }
@@ -104,4 +107,24 @@
   .App-link {
     color: #61dafb;
   }
+  .signUpcolour {
+    color: white;           /* Set the link color to white */
+    text-decoration: none;  /* Remove underline from the link */
+  }
+  .webName1 {
+    position: absolute;
+    font-size: 1.2em; /* Adjust as needed */
+    display: flex;
+    align-items: center;
+    padding-left: 60px; /* Ensure the text is vertically centered */
+    padding-top: 2px;
+  }
   
+  .quiz1 {
+    color: black;
+    margin-right: 5px;
+  }
+  
+  .shuffle1 {
+    color: #15803d;
+  }

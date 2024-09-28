@@ -175,10 +175,10 @@
 
 .xButton{
     position: absolute;
-    top: 5px; /* Distance from the top */
-    right: 5px; /* Distance from the right */
-    width: 20px; /* Size of the X button */
-    height: 20px;
+    top: 3px; /* Distance from the top */
+    right: 3px; /* Distance from the right */
+    width: 13px; /* Size of the X button */
+    height: 13px;
     cursor: pointer; /* Change cursor on hover */
 }
 
@@ -286,3 +286,28 @@
     height: 17px;
     margin-top: 10px;
   }
+
+  .saveButton1 {
+    display: flex;
+    background-color: #15803d;
+    color: white;
+    padding: 10px 20px;         /* Adjust padding for button size */
+    border: none;               /* Remove border */
+    border-radius: 5px;         /* Round the corners */
+    cursor: pointer;            /* Change cursor on hover */
+    font-size: 1em;             /* Ensure text size is appropriate */
+    white-space: nowrap;        /* Prevent the text from wrapping */
+    margin-right: 40px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+.adjust {
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center;     /* Vertically center */
+    height: 100%;           /* Full viewport height to center the content */
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}

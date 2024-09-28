@@ -137,11 +137,15 @@ function isFormValid() {
           <span className="Quiz">Quiz</span> <span className="builder">Builder</span>
         </h2>
         <button
-          className='saveButton'
-          onClick={handleSave}
-        >
-          Save
-        </button>
+  className='saveButton'
+  onClick={() => {
+    if (window.confirm("Are you sure you want to exit without saving?")) {
+      navigate('/makeTest');
+    }
+  }}
+>
+  Exit
+</button>
         <img className="iconPic" src="https://cdn-icons-png.flaticon.com/512/566/566985.png" alt="icon" />
       </nav>
 
@@ -204,13 +208,20 @@ function isFormValid() {
                       />
                       {/* Render delete button for choices except A and B */}
                       {choiceIndex > 1 && (
-                        <button className='deleteChoice' onClick={() => removeChoice(index, choiceIndex)}>Delete</button>
+                        <img
+                        src='https://thumb.ac-illust.com/82/828fbf80368cff42f9de6c0f594bd6eb_t.jpeg'
+                    className='xforchoice'
+                      alt="Remove"
+                      onClick={() => removeChoice(index, choiceIndex)}
+                        />
                       )}
                     </div>
                   ))}
                   <div className='wrapChoice'>
-                    <button className='addChoice' onClick={() => AddNewChoice(index)}>Add a New Choice</button>
-                  </div>
+  {question.choices.length < arr.length && (
+    <button className='addChoice' onClick={() => AddNewChoice(index)}>Add a New Choice</button>
+  )}
+</div>
                 </div>
               </div>
 
@@ -234,7 +245,11 @@ function isFormValid() {
           <button className='addQues' onClick={AddNewQuestion}>Add a New Question</button>
         </div>
       </div>
-
+      <div className='adjust'>
+      <button className='saveButton1' onClick={handleSave}>
+          Save
+        </button>
+      </div>
       {/* Display error message if form is not valid */}
       {errorMessage && <div className="errorMessage">{errorMessage}</div>}
     </div>

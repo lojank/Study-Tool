@@ -18,7 +18,7 @@
     font-size: 1.3em; /* Adjust as needed */
     display: flex;
     align-items: center;
-    padding-left: 50px; /* Ensure the text is vertically centered */
+    padding-left: 70px; /* Ensure the text is vertically centered */
   }
   
   .quiz {
@@ -36,7 +36,7 @@
     position: absolute;
     width: 40px;
     height: 40px;
-    padding-top: 10px;
+    padding-top: 6px;
   }
   
   .quizName {
@@ -102,8 +102,9 @@
   }
   
   .quiz-item h4 {
-    margin-bottom: 10px; /* Add some space below the quiz title */
+    margin-top: 140px; /* Add some space below the quiz title */
     font-weight: bold; /* Make the quiz title bold */
+    position: absolute;
   }
   
   .quiz-item p {
@@ -132,6 +133,7 @@
     font-size: 1.1em; /* Increase font size */
     font-weight: bold; /* Make the text bold */
     color: #333; /* Darker text color */
+    padding-right: 10px;
   }
   
   .log {
@@ -149,3 +151,85 @@
     background-color: #0e682c; /* Darker green on hover */
   }
   
+  .quiz-item {
+    position: relative; /* Needed for absolute positioning of the dropdown */
+    padding: 16px;
+    margin: 1px 0;
+    border: 1px solid #e5e7eb; /* Light gray border */
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .dropdown-container {
+    position: absolute;
+    top: 10px; /* Position at the top of the container */
+    right: 10px; /* Position to the right of the container */
+   
+  }
+  
+  .dropdown-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 10px; /* Adjust the size as needed */
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between dots */
+    margin-top: 15px;
+    margin-right: 7px;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 30px; /* Adjust according to the dropdown button size */
+    right: 0; /* Aligns it to the right */
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    border-radius: 4px;
+    min-width: 120px;
+    padding: 8px 0;
+  }
+  
+  .dropdown-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #4CAF50;
+    transition: background-color 0.3s;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+  .box-colour {
+    background-color: #15803d;
+    height: 130px;
+    width: 235px;
+    border-radius: 5px; /* Round the corners */
+    position: relative;
+  }
+  
+
+  .boxPic {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    padding-top: 10px;
+    margin-left: 95px;
+    margin-top: 30px;
+  }
+  .quizName1 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 10px; /* Adjust the space from the top */
+    margin-left: 14px; /* Align with the left edge of the green box */
+    padding-left: 20px; /* Adjust this to exactly align with the box padding */
+    width: 100%; /* Ensures the title takes the full width */
+  }

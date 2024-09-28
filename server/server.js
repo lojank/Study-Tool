@@ -61,7 +61,8 @@ app.get('/quiz/:quizId', authenticateJWT, async (req, res) => {
       quizData.questions.push({
         id: question.question_id,
         questionText: question.question_text,
-        correctAnswerId: correctAnswer.answer_option, // Get correct answer ID
+        correctAnswerId: correctAnswer.answer_id, // Get correct answer ID
+        answerOption: correctAnswer.answer_option,
         answers: answers.rows.map(answer => ({
           answerId: answer.answer_id,
           answerText: answer.answer_text,
@@ -120,10 +121,9 @@ app.put('/quiz/:quizId', authenticateJWT, async (req, res) => {
 });
 
 
-// Endpoint to handle quiz attempts
 app.post('/quiz/:quizId/attempt', authenticateJWT, async (req, res) => {
   const { quizId } = req.params;
-  const { score, answers } = req.body; // answers is an array of objects { questionId, selectedAnswerId }
+  const { score, answers } = req.body; // Answers is an array of objects { questionId, selectedAnswerId }
   const userId = req.user.user_id;
 
   try { 
@@ -134,20 +134,23 @@ app.post('/quiz/:quizId/attempt', authenticateJWT, async (req, res) => {
     );
     const attemptId = attemptResult.rows[0].attempt_id;
 
-    // Insert each answer the user selected
+    // Loop through the answers array and insert each answer
     for (const answer of answers) {
+      console.log('Inserting answer:', answer); // Updated log
+
       await pool.query(
         'INSERT INTO user_answers (attempt_id, question_id, answer_id) VALUES ($1, $2, $3)',
-        [attemptId, answer.questionId, answer.selectedAnswerId]
+        [attemptId, answer.questionId, answer.selectedAnswerId] 
       );
-    } 
+    }
 
-    res.status(201).json({ message: 'Quiz attempt saved successfully' });
+    res.status(201).json({ message: 'Quiz attempt saved successfully' }); 
   } catch (err) {
     console.error('Error saving quiz attempt:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
+
 
 
 // Example route to get all quizzes by the authenticated user

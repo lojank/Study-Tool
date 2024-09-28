@@ -94,7 +94,16 @@ function Test() {
         <h2 className="test-quizName">
           <span className="test-builder">{quizData.quizTitle}</span>
         </h2>
-        <button className='saveButton'>Save</button>
+        <button
+  className='saveButton'
+  onClick={() => {
+    if (window.confirm("Are you sure you want to exit without saving?")) {
+      navigate('/makeTest');
+    }
+  }}
+>
+  Exit
+</button>
         <img className="test-iconPic" src="https://cdn-icons-png.flaticon.com/512/566/566985.png" alt="icon" />
       </nav>
       <div className="test-question-container">

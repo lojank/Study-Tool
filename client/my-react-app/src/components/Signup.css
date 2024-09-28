@@ -8,7 +8,7 @@
     flex-direction: row;
  gap: 15px;
     height:4%;
-    width:50%;
+    width:51%;
 
 }
 .Name-input {
@@ -106,12 +106,7 @@
     justify-content: center;
     border: solid 1px black;
   }
-  .icon {
-    position: absolute;
-    height:80px;
-    z-index:0;
-    
-  }
+ 
   
   
   .App-link {

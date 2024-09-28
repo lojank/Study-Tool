@@ -48,7 +48,10 @@ function Signup() {
 
   return (
     <div className="App">
-      <img className="icon" src="https://cdn-icons-png.flaticon.com/512/566/566985.png"/>
+      <h2 className="webName1">
+          <span className="quiz1">Quiz</span> <span className="shuffle1">Shuffle</span>
+        </h2>
+      <img className="icon10" src="https://cdn-icons-png.flaticon.com/512/566/566985.png"/>
     <form className="login-con" onSubmit={handleSubmit}>
       <h1 className="loginAcc">Create an Account</h1>
         
@@ -106,7 +109,7 @@ function Signup() {
        
           <h1 className='new'>Already Have An Account?</h1>
           <h4 className="catchPhrase">Log in and access your study tools</h4>
-          <button className="signUp"><a href='/'>Log In</a></button>
+          <button className="signUp"><a className='signUpcolour'href='/'>Log In</a></button>
       
   
         <img src="https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcm0yMThiYXRjaDUtbmluZy0wN18xLmpwZw.jpg" className="App-logo" alt="logo" />

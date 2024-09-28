@@ -48,7 +48,10 @@ function Login() {
 
   return (
     <div className="App">
-      <img className="icon" src="https://cdn-icons-png.flaticon.com/512/566/566985.png" alt="Login Icon"/>
+      <h2 className="webName1">
+          <span className="quiz1">Quiz</span> <span className="shuffle1">Shuffle</span>
+        </h2>
+      <img className="icon10" src="https://cdn-icons-png.flaticon.com/512/566/566985.png" alt="Login Icon"/>
       <form className="login-con" onSubmit={handleSubmit}>
         <h1 className="loginAcc">Login To Your Account</h1>
 
@@ -80,7 +83,7 @@ function Login() {
         <h1 className='new'>New Here?</h1>
         <h2 className="catchPhrase">Sign up and improve your grades</h2>
         <button className="signUp">
-          <a href="/signup">Sign Up</a>
+          <a className='signUpcolour'href="/signup">Sign Up</a>
         </button>
 
         <img

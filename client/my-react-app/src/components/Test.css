@@ -12,10 +12,10 @@
 
 .test-quizName {
     font-size: 1.3em;
-    display: flex;
-    align-items: center;
-    padding-left: 50px;
+    text-align: center; /* Center the text */
+    width: 100%;        /* Ensure it takes up full width */
     margin-bottom: 30px;
+    position: relative;  /* This allows for proper centering of the icon */
 }
 
 .test-iconPic {
@@ -115,6 +115,8 @@
 }
 
 .test-builder {
-    margin-right: 5px;
-    margin-left: 20px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

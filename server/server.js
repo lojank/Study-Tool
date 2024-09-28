@@ -158,13 +158,22 @@ app.get('/user/quizzes', authenticateJWT, async (req, res) => {
   const userId = req.user.user_id; // Extract user_id from JWT token
 
   try {
-    const quizzes = await pool.query('SELECT * FROM quizzes WHERE user_id = $1', [userId]);
+    // Query to get quizzes along with the count of questions for each quiz
+    const quizzes = await pool.query(`
+      SELECT q.quiz_id, q.user_id, q.quiz_title, q.description, q.created_at, COUNT(ques.question_id) AS question_count
+      FROM quizzes q
+      LEFT JOIN questions ques ON q.quiz_id = ques.quiz_id
+      WHERE q.user_id = $1
+      GROUP BY q.quiz_id
+    `, [userId]);
+
     res.json(quizzes.rows);
   } catch (err) {
     console.error('Error fetching quizzes:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
+
 
 app.get('/user', authenticateJWT, async (req, res) => {
   const userId = req.user.user_id; // Extract user_id from JWT token

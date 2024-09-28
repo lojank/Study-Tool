@@ -124,10 +124,13 @@ function MakeTest() {
                 onClick={() => handleQuizClick(quiz.quiz_id)} // Make entire item clickable
               >
                 <div className='box-colour'>
-                <img className="boxPic" src="https://cdn-icons-png.flaticon.com/512/566/566985.png" alt="icon" />
+                  <img className="boxPic" src="https://cdn-icons-png.flaticon.com/512/566/566985.png" alt="icon" />
                 </div>
                 <h4 className='quizName1'>{quiz.quiz_title}</h4>
                 <p>{quiz.description}</p>
+
+                {/* Display the number of questions in the quiz */}
+                <p className="question-count">{quiz.question_count} Questions</p>
 
                 {/* Dropdown Button: Horizontal Three Dots */}
                 <div className="dropdown-container" onClick={(e) => e.stopPropagation()}>
@@ -161,6 +164,3 @@ function MakeTest() {
 }
 
 export default MakeTest;
-
-
-

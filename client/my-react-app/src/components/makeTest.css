@@ -233,3 +233,10 @@
     padding-left: 20px; /* Adjust this to exactly align with the box padding */
     width: 100%; /* Ensures the title takes the full width */
   }
+
+  .question-count {
+    font-size: 14px;
+    color: #555;
+    margin-top: 5px;
+  }
+  

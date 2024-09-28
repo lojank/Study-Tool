@@ -24,9 +24,9 @@ function Results() {
     <div className="results-container">
       <nav className='results-nav'>
         <h2 className="results-quizName">
-          <span className="results-builder">Quiz Results</span>
+        <span className="quiz15">Quiz</span> <span className="result">Results</span>
         </h2>
-        <button className='backButton' onClick={handleGoBack}>Go Back</button>
+        <button className='backButton' onClick={handleGoBack}>Exit</button>
         <img className="results-iconPic" src="https://cdn-icons-png.flaticon.com/512/566/566985.png" alt="icon" />
       </nav>
 

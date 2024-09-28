@@ -32,11 +32,6 @@ function Test() {
     fetchQuiz();
   }, [quizId]);
 
-  useEffect(() => {
-    console.log('Updated answers:', answers);
-    alert(JSON.stringify(answers)); // Alert the updated answers array
-  }, [answers]); // This effect will run every time answers is updated
-
   if (!quizData || !quizData.questions) {
     return <div>Loading...</div>; // Ensure both quizData and quizData.questions exist
   }
@@ -89,10 +84,6 @@ function Test() {
   
       alert(response.data.message);
       
-      alert(JSON.stringify(quizData))
-      console.log(JSON.stringify(quizData))
-      alert(JSON.stringify(finalAnswers))
-      console.log(JSON.stringify(finalAnswers))
       navigate('/results', { state: { quizData, answers: finalAnswers } });
     } catch (err) {
       console.error('Error submitting quiz:', err);

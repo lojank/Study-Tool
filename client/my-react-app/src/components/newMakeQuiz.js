@@ -29,7 +29,7 @@ const NewMakeQuiz = () => {
               id: question.id,
               text: question.questionText,
               choices: question.answers.map(answer => answer.answerText) || ['', ''],
-              correctAnswer: question.correctAnswerId,
+              correctAnswer: question.answerOption, //CHANGE TO answerOption
             }))
           );
         } catch (error) {

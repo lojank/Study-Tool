@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';  // Import useParams to get route params
+import { useParams, useNavigate } from 'react-router-dom';  
 import './Test.css';
-import axios from 'axios'; // For making HTTP requests
+import axios from 'axios'; 
 
 function Test() {
-  const { quizId } = useParams();  // Get quizId from the URL params
+  const { quizId } = useParams();  
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -32,47 +32,53 @@ function Test() {
     fetchQuiz();
   }, [quizId]);
 
-  if (!quizData) {
-    return <div>Loading...</div>; // Show loading state while fetching quiz data
+  useEffect(() => {
+    console.log('Updated answers:', answers);
+    alert(JSON.stringify(answers)); // Alert the updated answers array
+  }, [answers]); // This effect will run every time answers is updated
+
+  if (!quizData || !quizData.questions) {
+    return <div>Loading...</div>; // Ensure both quizData and quizData.questions exist
   }
 
   const question = quizData.questions[currentQuestion];
 
   const handleAnswerClick = (option) => {
-    setSelectedAnswer(option);
+    setSelectedAnswer(option); 
   };
 
   const handleSubmit = () => {
     if (selectedAnswer === question.correctAnswerId) {
       setScore(score + 1);
     }
-
-    // Store the selected answer for this question
-    setAnswers([...answers, { questionId: question.id, selectedAnswerId: selectedAnswer }]);
-
+  
+    setAnswers((prevAnswers) => [
+      ...prevAnswers,
+      { questionId: question.id, selectedAnswerId: selectedAnswer },
+    ]);
+  
     setIsSubmitted(true);
-
+  
     setTimeout(() => {
       setIsSubmitted(false);
       setSelectedAnswer(null);
-
+  
       if (currentQuestion < quizData.questions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
       } else {
-        // Quiz is complete, submit attempt
-        submitQuiz();
+        submitQuiz([...answers, { questionId: question.id, selectedAnswerId: selectedAnswer }]);
       }
-    }, 1000); // 1 second delay to show if the answer was correct or incorrect
+    }, 1000); 
   };
-
-  const submitQuiz = async () => {
+  
+  const submitQuiz = async (finalAnswers) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
         `http://localhost:5001/quiz/${quizId}/attempt`,
         {
           score,
-          answers,
+          answers: finalAnswers,  
         },
         {
           headers: {
@@ -80,19 +86,26 @@ function Test() {
           },
         }
       );
-
-      alert(response.data.message); // Show success message
-      navigate(`/makeTest`);
+  
+      alert(response.data.message);
+      
+      alert(JSON.stringify(quizData))
+      console.log(JSON.stringify(quizData))
+      alert(JSON.stringify(finalAnswers))
+      console.log(JSON.stringify(finalAnswers))
+      navigate('/results', { state: { quizData, answers: finalAnswers } });
     } catch (err) {
       console.error('Error submitting quiz:', err);
     }
   };
+  
+  
 
   return (
     <div className="test-container">
       <nav className='test-nav'>
         <h2 className="test-quizName">
-          <span className="test-builder">{quizData.quizTitle}</span>
+          <span className="test-builder">Quiz Shuffle</span>
         </h2>
         <button
   className='saveButton'

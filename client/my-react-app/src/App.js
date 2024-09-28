@@ -8,6 +8,8 @@ import MakeTest from './components/makeTest';
 import MakeQuiz from './components/makeQuiz';
 import Test from './components/Test'
 import NewMakeQuiz from './components/newMakeQuiz'
+import Results from './components/results';
+
 function App() {
   return (
     <Router>
@@ -20,6 +22,7 @@ function App() {
           <Route path="/makeQuiz" element={<MakeQuiz />} />
           <Route path="/quiz/:quizId" element={<Test />} />
           <Route path="/newMakeQuiz/:quizId" element={<NewMakeQuiz />} />
+          <Route path="/results" element={<Results />} /> 
         </Routes>
 
       </div>

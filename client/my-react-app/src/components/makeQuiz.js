@@ -135,7 +135,7 @@ function isFormValid() {
       <nav className='nav'>
         <h2 className="quizName">
           <span className="Quiz">Quiz</span> <span className="builder">Builder</span>
-        </h2>
+        </h2>``
         <button
   className='saveButton'
   onClick={() => {
